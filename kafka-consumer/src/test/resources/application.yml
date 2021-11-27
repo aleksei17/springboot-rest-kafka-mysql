@@ -1,0 +1,24 @@
+
+kafka:
+  wages-topic:
+    bootstrap-address: "${spring.embedded.kafka.brokers}"
+    name: "wages-test"
+    partitions: 1
+    replication-factor: 1
+    group-id: "wages-consumer-test"
+
+spring:
+  liquibase:
+    enabled: true
+    change-log: "classpath:db/changelog/db.changelog-master.xml"
+  datasource:
+    url: "jdbc:h2:mem:mydb"
+    username: sa
+    password: sa
+    driver-class-name: org.h2.Driver
+  jpa:
+    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
+
+wage.tax:
+  income-tax-percent: 20
+

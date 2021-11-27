@@ -1,0 +1,45 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+   http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="2021-11-25 12:00:01" author="aleksei.gvozdev">
+        <createTable tableName="employee">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="surname" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="wage" type="DECIMAL(10, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_event_time" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2021-11-25 12:00:02" author="aleksei.gvozdev">
+        <addUniqueConstraint columnNames="name, surname"
+                             constraintName="uc_employee_ns"
+                             tableName="employee"/>
+    </changeSet>
+
+    <changeSet id="2021-11-25 12:00:03" author="aleksei.gvozdev">
+        <addAutoIncrement
+                          columnDataType="int"
+                          columnName="id"
+                          incrementBy="1"
+                          startWith="1"
+                          tableName="employee"/>
+    </changeSet>
+
+</databaseChangeLog>
