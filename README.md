@@ -3,6 +3,12 @@
  - Maven
  - Docker
 
+## Flow
+
+1. PublisherApplication has REST API for changing employee wages
+2. When request received, PublisherApplication sends event to Kafka
+3. ConsumerApplication reads event from Kafka and stores it to database
+
 ## How to run and test locally
 
 1. `mvn clean install`
