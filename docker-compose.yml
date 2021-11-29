@@ -25,7 +25,7 @@ services:
       - zookeeper
   kafka_local_dev:
     image: wurstmeister/kafka
-    container_name: kafka
+    container_name: kafka_local_dev
     ports:
       - "9092:9092"
     environment:
