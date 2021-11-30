@@ -3,13 +3,13 @@ package ee.aleksei.gvozdev.kafka;
 import ee.aleksei.gvozdev.kafka.api.WageEvent;
 import ee.aleksei.gvozdev.web.dto.WageCreateDto;
 import org.awaitility.Duration;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
+import org.testcontainers.containers.KafkaContainer;
+import org.testcontainers.utility.DockerImageName;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -17,11 +17,17 @@ import java.util.Date;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.Matchers.equalTo;
 
-@Disabled("Passes when started in IntelliJ, but fails in command line")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = { "kafka.wages-topic.bootstrap-address=${spring.embedded.kafka.brokers}" })
-@EmbeddedKafka(partitions = 1, topics = "${kafka.wages-topic.name}")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext
 class KafkaPublisherTest {
+
+    public static KafkaContainer kafka =
+            new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka").withTag("5.4.3"));
+
+    static {
+        kafka.start();
+        System.setProperty("kafka.wages-topic.bootstrap-address", kafka.getBootstrapServers());
+    }
 
     @Autowired
     private TestWageProcessor testWageProcessor;
