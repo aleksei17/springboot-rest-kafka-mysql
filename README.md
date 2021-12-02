@@ -17,6 +17,8 @@
 4. Go to [Swagger UI](http://localhost:8080/swagger-ui.html) page and post the wage
 5. See saved result in database
 
+IntelliJ configurations for building and running services are provided.
+
 ## Running dockerized apps
 
 1. `mvn clean install`
