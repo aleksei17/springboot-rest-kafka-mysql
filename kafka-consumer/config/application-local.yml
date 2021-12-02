@@ -1,5 +1,3 @@
-server.port: 8070
-
 kafka:
   wages-topic:
     name: "wages-local"
@@ -11,14 +9,12 @@ kafka:
 spring:
   liquibase:
     enabled: true
-    change-log: "classpath:db/changelog/db.changelog-master.xml"
     user: admin
     password: admin
   datasource:
     url: "jdbc:mysql://localhost:3306/db"
     username: admin
     password: admin
-    driver-class-name: com.mysql.jdbc.Driver
 
 wage.tax:
   income-tax-percent: 20

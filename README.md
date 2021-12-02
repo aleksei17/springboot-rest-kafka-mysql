@@ -11,18 +11,16 @@
 
 ## How to run and test locally
 
-1. `mvn clean install`
-2. Start zookeeper, kafka_local_dev, and consumer_app_db in docker-compose file
-3. Run `PublisherApplication` and `ConsumerApplication` in IntelliJ
+1. `mvn clean install` (or _Build all_ in IntelliJ run configs)
+2. `docker-compose -f docker-compose.local-dev.yml up -d` (or _Run docker-compose.local-dev_ in IntelliJ run configs)
+3. Run `PublisherApplication` and `ConsumerApplication` in IntelliJ (run configs also provided)
 4. Go to [Swagger UI](http://localhost:8080/swagger-ui.html) page and post the wage
 5. See saved result in database
 
-IntelliJ configurations for building and running services are provided.
-
 ## Running dockerized apps
 
-1. `mvn clean install`
-2. Start zookeeper, kafka, and consumer_app_db in docker-compose file
-3. Start publisher_app and consumer_app in docker-compose file
+1. Stop containers for local development
+2. `mvn clean install`
+3. `docker-compose up`
 4. Go to [Swagger UI](http://localhost:8080/swagger-ui.html) page and post the wage
 5. See saved result in database
