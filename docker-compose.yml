@@ -58,8 +58,8 @@ services:
       spring.liquibase.change-log: classpath:db/changelog/db.changelog-master.xml
       spring.liquibase.user: admin
       spring.liquibase.password: admin
-      spring.datasource.username: admin
-      spring.datasource.password: admin
+      spring.datasource.username: consumer_app
+      spring.datasource.password: randompassword
       spring.datasource.driver-class-name: com.mysql.jdbc.Driver
     links:
       - kafka:kafka
@@ -73,3 +73,5 @@ services:
       MYSQL_DATABASE: db
     ports:
       - '3306:3306'
+    volumes:
+      - "./init.sql:/docker-entrypoint-initdb.d/1.sql"

@@ -13,8 +13,8 @@ spring:
     password: admin
   datasource:
     url: "jdbc:mysql://localhost:3306/db"
-    username: admin
-    password: admin
+    username: consumer_app
+    password: password
 
 wage.tax:
   income-tax-percent: 20

@@ -21,6 +21,7 @@
 
 1. Stop containers for local development
 2. `mvn clean install`
-3. `docker-compose up`
-4. Go to [Swagger UI](http://localhost:8080/swagger-ui.html) page and post the wage
-5. See saved result in database
+3. If a tester wants to run containers with their own variables, then values in `docker-compose.yml` and `init.sql` should be changed
+4. `docker-compose up`
+5. Go to [Swagger UI](http://localhost:8080/swagger-ui.html) page and post the wage
+6. See saved result in database
