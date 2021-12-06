@@ -56,8 +56,8 @@ services:
       wage.tax.income-tax-percent: 10
       spring.liquibase.enabled: true
       spring.liquibase.change-log: classpath:db/changelog/db.changelog-master.xml
-      spring.liquibase.user: admin
-      spring.liquibase.password: admin
+      spring.liquibase.user: root
+      spring.liquibase.password: root
       spring.datasource.username: consumer_app
       spring.datasource.password: randompassword
       spring.datasource.driver-class-name: com.mysql.jdbc.Driver
@@ -73,5 +73,3 @@ services:
       MYSQL_DATABASE: db
     ports:
       - '3306:3306'
-    volumes:
-      - "./init.sql:/docker-entrypoint-initdb.d/1.sql"

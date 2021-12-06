@@ -1,0 +1,28 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+   http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="2021-12-02 12:00:01" author="author" dbms="mysql">
+        <sql>
+            CREATE USER '${consumer.app.user}' IDENTIFIED BY '${consumer.app.password}';
+        </sql>
+        <rollback>
+            DROP USER IF EXISTS '${consumer.app.user}';
+        </rollback>
+    </changeSet>
+
+    <changeSet id="2021-12-02 12:00:02" author="author" dbms="mysql">
+        <sql>
+            GRANT INSERT, UPDATE, SELECT, DELETE ON db.* TO '${consumer.app.user}';
+        </sql>
+        <rollback>
+            REVOKE INSERT, UPDATE, SELECT, DELETE ON db.* FROM '${consumer.app.user}';
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
