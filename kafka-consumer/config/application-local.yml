@@ -9,8 +9,11 @@ kafka:
 spring:
   liquibase:
     enabled: true
-    user: admin
-    password: admin
+    user: root
+    password: root
+    parameters:
+      consumer.app.user: ${spring.datasource.username}
+      consumer.app.password: ${spring.datasource.password}
   datasource:
     url: "jdbc:mysql://localhost:3306/db"
     username: consumer_app

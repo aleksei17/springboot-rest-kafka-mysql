@@ -1,5 +1,8 @@
 spring:
   liquibase:
     change-log: "classpath:db/changelog/db.changelog-master.xml"
+    parameters:
+      consumer.app.user: ${spring.datasource.username}
+      consumer.app.password: ${spring.datasource.password}
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
