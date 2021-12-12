@@ -45,7 +45,7 @@ class WageControllerTest {
         mockMvc.perform(post(ENDPOINT)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(request))
-                .andExpect(status().isOk())
+                .andExpect(status().isAccepted())
                 .andReturn()
                 .getResponse();
         verify(kafkaPublisher).publish(any());

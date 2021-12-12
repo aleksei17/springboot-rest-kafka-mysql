@@ -2,6 +2,7 @@ package ee.aleksei.gvozdev.web;
 
 import ee.aleksei.gvozdev.kafka.KafkaPublisher;
 import ee.aleksei.gvozdev.web.dto.WageCreateDto;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +21,8 @@ public class WageController {
     }
 
     @PostMapping
-    public void post(@Valid @RequestBody WageCreateDto wageCreateDto) {
+    public ResponseEntity<Void> post(@Valid @RequestBody WageCreateDto wageCreateDto) {
         kafkaPublisher.publish(wageCreateDto);
+        return ResponseEntity.accepted().build();
     }
 }
