@@ -1,57 +1,81 @@
 version: '3'
 
 services:
-  zookeeper:
-    image: wurstmeister/zookeeper
-    container_name: zookeeper
+  zookeeper-1:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
     ports:
-      - "2181:2181"
-  kafka:
-    image: wurstmeister/kafka
-    container_name: kafka
-    hostname: kafka
+      - 22181:2181
+  zookeeper-2:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
     ports:
-      - "9092:9092"
+      - 32181:2181
+
+  kafka-1:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+    ports:
+      - 29092:29092
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ADVERTISED_PORT: 9092
-      KAFKA_ADVERTISED_HOST_NAME: kafka
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENERS: INTERNAL://kafka:9092
-      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-1:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+  kafka-2:
+    image: confluentinc/cp-kafka:latest
     depends_on:
-      - zookeeper
+      - zookeeper-1
+      - zookeeper-2
+    ports:
+      - 39092:39092
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-2:9092,PLAINTEXT_HOST://localhost:39092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
   publisher_app:
     build:
       context: ./kafka-publisher
     ports:
       - 8080:8080
     depends_on:
-      - "kafka"
+      - kafka-1
+      - kafka-2
     environment:
-      kafka.wages-topic.bootstrap-address: kafka:9092
+      kafka.wages-topic.bootstrap-address: kafka-1:9092,kafka-2:9092
       kafka.wages-topic.name: wages-docker
-      kafka.wages-topic.partitions: 1
-      kafka.wages-topic.replication-factor: 1
+      kafka.wages-topic.partitions: 2
+      kafka.wages-topic.replication-factor: 2
       server.port: 8080
     links:
-      - kafka:kafka
+      - kafka-1:kafka-1
+      - kafka-2:kafka-2
   consumer_app:
     build:
       context: ./kafka-consumer
     ports:
       - 8070:8070
     depends_on:
-      - kafka
+      - kafka-1
+      - kafka-2
       - consumer_app_db
     environment:
-      kafka.wages-topic.bootstrap-address: kafka:9092
+      kafka.wages-topic.bootstrap-address: kafka-1:9092,kafka-2:9092
       spring.datasource.url: jdbc:mysql://consumer_app_db:3306/db
       kafka.wages-topic.name: wages-docker
-      kafka.wages-topic.partitions: 1
-      kafka.wages-topic.replication-factor: 1
+      kafka.wages-topic.partitions: 2
+      kafka.wages-topic.replication-factor: 2
       kafka.wages-topic.group-id: wages-consumer-docker
       wage.tax.income-tax-percent: 10
       spring.liquibase.enabled: true
@@ -62,7 +86,8 @@ services:
       spring.datasource.password: randompassword
       spring.datasource.driver-class-name: com.mysql.jdbc.Driver
     links:
-      - kafka:kafka
+      - kafka-1:kafka-1
+      - kafka-2:kafka-2
   consumer_app_db:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password

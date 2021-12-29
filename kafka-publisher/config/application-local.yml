@@ -3,6 +3,6 @@ server.port: 8080
 kafka:
   wages-topic:
     name: "wages-local"
-    bootstrap-address: "localhost:9092"
-    partitions: 1
-    replication-factor: 1
+    bootstrap-address: "localhost:29092,localhost:39092"
+    partitions: 2
+    replication-factor: 2
